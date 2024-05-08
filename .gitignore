@@ -1,1 +1,6 @@
 /stata_dataset
+/split_dataset
+/results
+__pycache__
+*.jpeg
+*.webp
