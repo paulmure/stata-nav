@@ -91,19 +91,63 @@ def train_all():
     torch.save(model, 'results/resnet_all.model')
 
 
-def train_augmented():
-    num_classes, train_loader, val_loader = get_augmented_data_loader()
-    baseline_model = Baseline(num_classes)
+def train_random_rotation():
+    transform = transforms.Compose([
+        transforms.RandomRotation(45),
+        transforms.Resize((224, 224)),
+        transforms.ToTensor()
+    ])
+    num_classes, train_loader, val_loader = get_augmented_data_loader(
+        transform)
+    baseline_model = ReplaceAll(num_classes)
     optimizer = optim.Adam(baseline_model.parameters())
     criterion = nn.CrossEntropyLoss()
     hist = train(baseline_model, optimizer, criterion,
                  train_loader, val_loader, NUM_EPOCHS)
-    with open('results/augmented.hist', 'wb') as fp:
+    with open('results/random_rotation.hist', 'wb') as fp:
         pickle.dump(hist, fp)
-    torch.save(baseline_model, 'results/augmented.model')
+    torch.save(baseline_model, 'results/random_rotation.model')
+
+
+def train_random_crop():
+    transform = transforms.Compose([
+        transforms.RandomCrop(1500),
+        transforms.Resize((224, 224)),
+        transforms.ToTensor()
+    ])
+    num_classes, train_loader, val_loader = get_augmented_data_loader(
+        transform)
+    baseline_model = ReplaceAll(num_classes)
+    optimizer = optim.Adam(baseline_model.parameters())
+    criterion = nn.CrossEntropyLoss()
+    hist = train(baseline_model, optimizer, criterion,
+                 train_loader, val_loader, NUM_EPOCHS)
+    with open('results/random_crop.hist', 'wb') as fp:
+        pickle.dump(hist, fp)
+    torch.save(baseline_model, 'results/random_crop.model')
+
+
+def train_random_blur():
+    transform = transforms.Compose([
+        transforms.GaussianBlur(kernel_size=(7, 13), sigma=(6, 7)),
+        transforms.Resize((224, 224)),
+        transforms.ToTensor()
+    ])
+    num_classes, train_loader, val_loader = get_augmented_data_loader(
+        transform)
+    baseline_model = ReplaceAll(num_classes)
+    optimizer = optim.Adam(baseline_model.parameters())
+    criterion = nn.CrossEntropyLoss()
+    hist = train(baseline_model, optimizer, criterion,
+                 train_loader, val_loader, NUM_EPOCHS)
+    with open('results/random_blur.hist', 'wb') as fp:
+        pickle.dump(hist, fp)
+    torch.save(baseline_model, 'results/random_blur.model')
 
 
 train_baseline()
 train_last_layer()
 train_all()
-train_augmented()
+train_random_rotation()
+train_random_crop()
+train_random_blur()

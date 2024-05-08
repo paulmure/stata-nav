@@ -6,8 +6,10 @@ VAL_PATH = 'split_dataset/val'
 
 
 def get_transform():
-    transform = transforms.Compose(
-        [transforms.Resize((224, 224)), transforms.ToTensor()])
+    transform = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor()
+    ])
     return transform
 
 
@@ -36,8 +38,8 @@ def get_data_loader():
     return len(train_set.classes), train_loader, val_loader
 
 
-def get_augmented_data_loader():
-    train_set = datasets.ImageFolder(TRAIN_PATH, transform=get_augmented_transform())
+def get_augmented_data_loader(augmented_transform):
+    train_set = datasets.ImageFolder(TRAIN_PATH, transform=augmented_transform)
     val_set = datasets.ImageFolder(VAL_PATH, transform=get_transform())
 
     train_loader = torch.utils.data.DataLoader(

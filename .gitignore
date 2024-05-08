@@ -4,3 +4,4 @@
 __pycache__
 *.jpeg
 *.webp
+.DS_Store
