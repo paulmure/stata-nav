@@ -145,9 +145,22 @@ def train_random_blur():
     torch.save(baseline_model, 'results/random_blur.model')
 
 
-train_baseline()
-train_last_layer()
-train_all()
-train_random_rotation()
-train_random_crop()
-train_random_blur()
+def train_kaiming_uniform():
+    num_classes, train_loader, val_loader = get_data_loader()
+    model = KaimingUniform(num_classes)
+    optimizer = optim.Adam(model.parameters())
+    criterion = nn.CrossEntropyLoss()
+    hist = train(model, optimizer, criterion,
+                 train_loader, val_loader, NUM_EPOCHS)
+    with open('results/kaiming_uniform.hist', 'wb') as fp:
+        pickle.dump(hist, fp)
+    torch.save(model, 'results/kaiming_uniform.model')
+
+
+# train_baseline()
+# train_last_layer()
+# train_all()
+# train_random_rotation()
+# train_random_crop()
+# train_random_blur()
+train_kaiming_uniform()
